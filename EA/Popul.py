@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from Indiv import Indiv, IndivInt, IndivReal
+from Indiv import Indiv
 from random import random
 import numpy as np
 
@@ -95,51 +95,6 @@ class Popul:
 
     
 
-def parser(file):
-    with open(file) as f:
-        lines=f.readlines()
-        res={}
-        go=False
-        for line in lines:
-            if line.strip("\n") == "EOF":
-                go=False
-            if go:
-                line=line.strip("\n")
-                l=line.split(' ')
-                res[int(l[0])]=(float(l[1]), float(l[2]))
-            if line.strip("\n")=="NODE_COORD_SECTION":
-                go=True
-        return res
-
-def distmat(dic):
-    res= np.zeros((len(dic.keys()),(len(dic.keys()))))
-    for i in dic.keys():
-        for j in range(i+1,len(dic.keys())+1):
-            d=dist(i,j,dic)
-            res[i-1][j-1]=d
-            res[j-1][i-1]= d
-    return res
-
-def dist(i,j,dic):
-    return (dic[i][0]-dic[j][0])**2+(dic[i][1]-dic[j][1])**2
-
-def generate_blocks(mat,perc):
-    res = []
-    for i in range(len(mat)):
-        min=None
-        for j in range(i+1,len(mat)):
-            if min==None:
-                min = (i+1,j+1,mat[i][j])
-            elif min[2] > mat[i][j]:
-                min = (i+1,j+1,mat[i][j])
-        res.append(min)
-    n = len(res)
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            if res[j][2] < res[j + 1][2]:
-                res[j], res[j + 1] = res[j + 1], res[j]
-    n_blocks = int(len(res)*perc)
-    return res[:n_blocks]
 
 
 
