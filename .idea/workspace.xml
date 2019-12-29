@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b7edee4f-1a69-4c8d-8e8a-4b1dc1dfbadb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/EA/TestGenes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataScience/files/brincadeira.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataScience/files/brincadeira.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataScience/files/.ipynb_checkpoints/Trabalho SIB-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/DataScience/files/.ipynb_checkpoints/Trabalho SIB-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataScience/files/Trabalho SIB.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/DataScience/files/Trabalho SIB.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EA/EvolAlgorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/EA/EvolAlgorithm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EA/Indiv.py" beforeDir="false" afterPath="$PROJECT_DIR$/EA/Indiv.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EA/Popul.py" beforeDir="false" afterPath="$PROJECT_DIR$/EA/Popul.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,7 +32,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -46,7 +51,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.brincadeira">
+  <component name="RunManager" selected="Python.EvolAlgorithm">
     <configuration name="EvolAlgorithm" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="sib" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -61,6 +66,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EA/EvolAlgorithm.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Indiv" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="sib" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EA" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EA/Indiv.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -91,7 +118,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="brincadeira" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="deepLearning" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="sib" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -99,12 +126,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DataScience/files" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DataScience/files/brincadeira.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DeepLearning.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -113,10 +140,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.deepLearning" />
+      <item itemvalue="Python.EvolAlgorithm" />
+      <item itemvalue="Python.Popul" />
+      <item itemvalue="Python.Indiv" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.brincadeira" />
         <item itemvalue="Python.EvolAlgorithm" />
+        <item itemvalue="Python.Indiv" />
+        <item itemvalue="Python.deepLearning" />
         <item itemvalue="Python.Popul" />
       </list>
     </recent_temporary>
@@ -133,6 +167,11 @@
       <updated>1575483330447</updated>
       <workItem from="1575483336717" duration="4604000" />
       <workItem from="1575720568954" duration="401000" />
+      <workItem from="1576512670068" duration="244000" />
+      <workItem from="1576512989219" duration="3517000" />
+      <workItem from="1577316461691" duration="10395000" />
+      <workItem from="1577367505501" duration="36564000" />
+      <workItem from="1577574255396" duration="29091000" />
     </task>
     <servers />
   </component>
@@ -152,9 +191,22 @@
       </map>
     </option>
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/sib$EvolAlgorithm.coverage" NAME="EvolAlgorithm Coverage Results" MODIFIED="1575313730256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EA" />
+    <SUITE FILE_PATH="coverage/sib$EvolAlgorithm.coverage" NAME="EvolAlgorithm Coverage Results" MODIFIED="1577637850755" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EA" />
     <SUITE FILE_PATH="coverage/sib$Popul.coverage" NAME="Popul Coverage Results" MODIFIED="1575310729592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EA" />
+    <SUITE FILE_PATH="coverage/sib$deepLearning.coverage" NAME="deepLearning Coverage Results" MODIFIED="1576516863663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sib$brincadeira.coverage" NAME="brincadeira Coverage Results" MODIFIED="1575485917065" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataScience/files" />
+    <SUITE FILE_PATH="coverage/sib$Indiv.coverage" NAME="Indiv Coverage Results" MODIFIED="1577474489421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EA" />
   </component>
 </project>

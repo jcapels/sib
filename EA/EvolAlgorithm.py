@@ -1,47 +1,83 @@
 # -*- coding: utf-8 -*-
 
 from Popul import Popul
+from Indiv import Indiv
 import numpy as np
 from collections import defaultdict
+from random import shuffle, randint, sample
+import matplotlib
+import itertools
+
+from matplotlib.pyplot import plot, show
+
 
 class EvolAlgorithm:
     
-    def __init__ (self, popsize, numits, noffspring, indsize):
+    def __init__ (self, popsize, numits, noffspring,blocks,mat):
         self.popsize = popsize
         self.numits = numits
         self.noffspring = noffspring
-        self.indsize = indsize
+        self.blocks = blocks
+        self.matdist = mat
+
+    def generate_indvs(self):
+        res = []
+        for i in range(self.popsize):
+            x = self.blocks.copy()
+            shuffle(x)
+            indv = Indiv(self.matdist, list(itertools.chain.from_iterable(x)))
+            res.append(indv)
+        return res
         
-    def initPopul(self, indsize):
-        self.popul = Popul(self.popsize, indsize)
+    def initPopul(self):
+        indivs=self.generate_indvs()
+        self.popul = Popul(self.popsize,indivs)
         
-    def iteration(self):
-        parents = self.popul.selection(self.noffspring)
+    def iteration(self,mode=0):
+        if mode==1:
+            print("aiaiai")
+            indexes = sample(range(10),1)
+            best_indexes = self.popul.getRanking()[:10]
+            self.popul.getIndiv(best_indexes[indexes[0]][0]).random_mutations_indiv()
+            self.popul.updateRanking()
+            self.popul.random_mutations(0.7)
+            parents = self.popul.selection(self.noffspring)
+
+        else:
+            self.popul.random_mutations()
+            self.popul.updateRanking()
+            parents = self.popul.selection(self.noffspring)
+        shuffle(parents)
         offspring = self.popul.recombination(parents, self.noffspring)
-        self.evaluate(offspring)
+        self.popul.updateRanking()
         self.popul.reinsertion(offspring)
-    
-    def evaluate(self, indivs):
-        for i in range(len(indivs)):
-            ind = indivs[i]
-            fit = 0.0
-            for x in ind.getGenes():
-                if x == 1: fit += 1.0
-            ind.setFitness(fit)
-        return None
-    
+
     def run(self):
-        self.initPopul(self.indsize)
-        self.evaluate(self.popul.indivs)
+        self.initPopul()
         self.bestsol = []
-        self.bestfit = 0.0
-        for i in range(self.numits+1):            
-            self.iteration()
+        self.bestfit = self.popul.getFitnesses()[0]
+        j=0
+        stack=[0]
+        for i in range(self.numits+1):
+            if self.popul.getRanking()[0][1]!=stack[0]:
+                stack.pop(0)
+                stack.append(self.popul.getRanking()[0][1])
+                j=0
+            if self.popul.getRanking()[0][1]==stack[0] and j%70==0 and j!=0:
+                self.iteration(1)
+                j+=1
+
+            else:
+                self.iteration()
+                j+=1
             bs, bf = self.popul.bestSolution()
-            if bf > self.bestfit:
+            if bf < self.bestfit:
                 self.bestfit = bf
                 self.bestsol = bs
+
             print("Iteration:", i, " ", "Best: ", self.popul.bestFitness())
+        print("Best solution: ", self.bestsol.getGenes())
+        print("Best fitness: ", self.bestfit)
         #self.bestsol, self.bestfit = self.popul.bestSolution()
 
 def parser(file):
@@ -92,8 +128,15 @@ def generate_blocks(mat,perc):
     filtered = res[:n_blocks]
     blocks = [ [r[0],r[1]] for r in filtered ]
     merged = merge_common(blocks)
-    return list(merged)
+    merged = list(merged)
+    merged_blocks = list(itertools.chain.from_iterable(merged))
+    for g in [i for i in range(1,len(mat[0])+1)]:
+        if g not in merged_blocks:
+            merged.append([g])
+    return merged
 
+
+#def divided_blocks(lst,n):
 
 # merge function to  merge all sublist having common elements.
 def merge_common(lists):
@@ -117,14 +160,26 @@ def merge_common(lists):
             yield sorted(comp(node))
 
 def test():
-    ea = EvolAlgorithm(100, 4000, 50, 1000)
+    ea = EvolAlgorithm(200, 20000, 50, 1000)
     ea.run()
+
+
+def generate_indvs(blocks,popsize):
+    res = []
+    for i in range(popsize):
+        x = blocks.copy()
+        shuffle(x)
+        res.append(list(itertools.chain.from_iterable(x)))
+    return res
+
+
 
 if __name__=="__main__":
     dic = parser("qa194.tsp")
     mat = distmat(dic)
-    print(generate_blocks(mat,0.3))
-
+    blocks=generate_blocks(mat,0.4)
+    ea = EvolAlgorithm(200, 20000, 100,blocks,mat)
+    ea.run()
 
 
 
