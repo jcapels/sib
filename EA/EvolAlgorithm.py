@@ -35,7 +35,6 @@ class EvolAlgorithm:
         self.popul= Popul(self.popsize,indivs)
         
     def iteration(self,mode):
-
         if mode == 1:
             self.popul.random_mutations()
         elif mode==2:
@@ -46,8 +45,16 @@ class EvolAlgorithm:
             self.popul.updateRanking()
             self.popul.random_mutations(0.7)
 
+        elif mode==3:
+            self.popul.random_mutations(0.5)
+
+        elif mode==4:
+            self.popul.random_mutations(0.5)
+            self.popul.getIndiv(self.popul.getRanking()[0][0]).mutation(2)
+            self.popul.updateRanking()
+
+
         parents = self.popul.selection(self.noffspring)
-        #shuffle(parents)
         offspring = self.popul.recombination(parents, self.noffspring)
         self.popul.reinsertion(offspring)
 
@@ -55,20 +62,26 @@ class EvolAlgorithm:
         self.initPopul()
         self.bestsol = []
         self.bestfit = self.popul.getFitnesses()[0]
-        l=0
+        l=1
         previous=self.popul.bestFitness()
         for i in range(self.numits+1):
-            if l==100:
-                self.iteration(1)
-                l=0
-                print("welele")
-            else:
+            if l%50==0 and l%100!=0 and l%250!=0:
+                self.iteration(3)
+                print("---------Random mutations in the worst 50 % ------------")
+            elif l%100==0:
                 self.iteration(2)
+                print("---------Random mutations in the worse 70 % and 3-swap mutation in the best 4 to 10------------")
+            elif l%250==0:
+                self.iteration(4)
+                print("---------Random mutations in the worse 50 % and 2-swap mutation in the best ------------")
+                l=1
+            else:
+                self.iteration(1)
 
             bs, bf = self.popul.bestSolution()
 
             if bf!=previous:
-                l=0
+                l=1
                 previous=bf
             else:
                 l+=1
@@ -161,22 +174,14 @@ def merge_common(lists):
             yield sorted(comp(node))
 
 
-def generate_indvs(blocks,popsize):
-    res = []
-    print(blocks)
-    for i in range(popsize):
-        x = blocks.copy()
-        shuffle(x)
-        res.append(list(itertools.chain.from_iterable(x)))
-    return res
 
 
 
 if __name__=="__main__":
     dic = parser("qa194.tsp")
     mat = distmat(dic)
-    blocks=generate_blocks(mat,0.85)
-    ea = EvolAlgorithm(200, 4000, 70,blocks,mat)
+    blocks=generate_blocks(mat,0.86)
+    ea = EvolAlgorithm(120, 20000, 50,blocks,mat)
     ea.run()
 
 
