@@ -44,16 +44,31 @@ class Indiv:
             s = len(self.genes)
             pos1=0
             pos2=0
-            # while pos1 == pos2 or pos1 - pos2 in [-1, 1, 193, -193]:
+            #while pos1 == pos2 or pos1 - pos2 in [-1, 1, 193, -193]:
             while pos1==pos2:
                 pos1 = randint(0, s - 1)
                 pos2 = randint(0, s - 1)
             gene1 = self.genes[pos1]
             gene2 = self.genes[pos2]
 
-            if pos1-pos2 in [-1,1,193,-193]:
+            if pos1-pos2 in [-1,193]:
+                self.fitness -= self.dist(self.genes[pos1 - 1], self.genes[pos1]) \
+                             + self.dist(self.genes[pos2], self.genes[(pos2 + 1) % (s)])
+
+                self.fitness += self.dist(self.genes[pos1 - 1], self.genes[pos2]) \
+                            + self.dist(self.genes[pos1], self.genes[(pos2 + 1) % (s)])
+
                 self.genes[pos1], self.genes[pos2] = gene2, gene1
-                self.calculate_fitness()
+
+            elif pos1-pos2 in [1,-193]:
+                self.fitness -= self.dist(self.genes[pos2 - 1], self.genes[pos2]) \
+                                + self.dist(self.genes[pos1], self.genes[(pos1 + 1) % (s)])
+
+                self.fitness += self.dist(self.genes[pos2 - 1], self.genes[pos1]) \
+                                + self.dist(self.genes[pos2], self.genes[(pos1 + 1) % (s)])
+
+                self.genes[pos1], self.genes[pos2] = gene2, gene1
+                #self.calculate_fitness()
             else:
                 self.fitness-=(self.dist(self.genes[pos1-1],self.genes[pos1]) \
                           + self.dist(self.genes[pos1],self.genes[(pos1+1) % (s)]) \
@@ -66,12 +81,13 @@ class Indiv:
                             + self.dist(self.genes[pos2 - 1],self.genes[pos1])
                 self.genes[pos1], self.genes[pos2] = gene2, gene1
 
+
         elif type == 3:
             s = len(self.genes)
             pos1 = 0
             pos2 = 0
             pos3 = 0
-            # while pos1 == pos2 or pos2 == pos3 or pos1 == pos3 or pos1 - pos2 in [1, -1, 193, -193] or pos1 - pos3 in [1, -1, 193, -193] or pos2 - pos3 in [1, -1, 193, -193]:
+            #while pos1 == pos2 or pos2 == pos3 or pos1 == pos3 or pos1 - pos2 in [1, -1, 193, -193] or pos1 - pos3 in [1, -1, 193, -193] or pos2 - pos3 in [1, -1, 193, -193]:
             while pos1 == pos2 or pos2 == pos3 or pos1==pos3:
                 pos1 = randint(0, s - 1)
                 pos2 = randint(0, s - 1)

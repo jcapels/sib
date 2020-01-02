@@ -39,10 +39,8 @@ class EvolAlgorithm:
         if mode == 1:
             self.popul.random_mutations()
         elif mode==2:
-            best_indexes = self.popul.getRanking()[1:4]
             best_indexes2 = self.popul.getRanking()[4:10]
-            for i in best_indexes:
-                self.popul.getIndiv(i[0]).mutation(2)
+            #self.popul.getIndiv(self.popul.getRanking()[0][0]).mutation(2)
             for i in best_indexes2:
                 self.popul.getIndiv(i[0]).mutation(3)
             self.popul.updateRanking()
@@ -60,7 +58,7 @@ class EvolAlgorithm:
         l=0
         previous=self.popul.bestFitness()
         for i in range(self.numits+1):
-            if l==50:
+            if l==100:
                 self.iteration(1)
                 l=0
                 print("welele")
@@ -162,13 +160,10 @@ def merge_common(lists):
         if node not in visited:
             yield sorted(comp(node))
 
-def test():
-    ea = EvolAlgorithm(200, 20000, 50, 1000)
-    ea.run()
-
 
 def generate_indvs(blocks,popsize):
     res = []
+    print(blocks)
     for i in range(popsize):
         x = blocks.copy()
         shuffle(x)
@@ -180,8 +175,8 @@ def generate_indvs(blocks,popsize):
 if __name__=="__main__":
     dic = parser("qa194.tsp")
     mat = distmat(dic)
-    blocks=generate_blocks(mat,0.4)
-    ea = EvolAlgorithm(100, 4000, 70,blocks,mat)
+    blocks=generate_blocks(mat,0.85)
+    ea = EvolAlgorithm(200, 4000, 70,blocks,mat)
     ea.run()
 
 
