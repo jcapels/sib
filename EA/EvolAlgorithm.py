@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from copy import copy
+from math import sqrt
 
 from Popul import Popul
 from Indiv import Indiv
 import numpy as np
 from collections import defaultdict
 from random import shuffle, randint, sample
-import matplotlib
 import itertools
 
 from matplotlib.pyplot import plot, show
@@ -31,50 +32,52 @@ class EvolAlgorithm:
         
     def initPopul(self):
         indivs=self.generate_indvs()
-        self.popul = Popul(self.popsize,indivs)
+        self.popul= Popul(self.popsize,indivs)
         
-    def iteration(self,mode=0):
-        if mode==1:
-            print("aiaiai")
-            indexes = sample(range(10),1)
-            best_indexes = self.popul.getRanking()[:10]
-            self.popul.getIndiv(best_indexes[indexes[0]][0]).random_mutations_indiv()
+    def iteration(self,mode):
+
+        if mode == 1:
+            self.popul.random_mutations()
+        elif mode==2:
+            best_indexes = self.popul.getRanking()[1:4]
+            best_indexes2 = self.popul.getRanking()[4:10]
+            for i in best_indexes:
+                self.popul.getIndiv(i[0]).mutation(2)
+            for i in best_indexes2:
+                self.popul.getIndiv(i[0]).mutation(3)
             self.popul.updateRanking()
             self.popul.random_mutations(0.7)
-            parents = self.popul.selection(self.noffspring)
 
-        else:
-            self.popul.random_mutations()
-            self.popul.updateRanking()
-            parents = self.popul.selection(self.noffspring)
-        shuffle(parents)
+        parents = self.popul.selection(self.noffspring)
+        #shuffle(parents)
         offspring = self.popul.recombination(parents, self.noffspring)
-        self.popul.updateRanking()
         self.popul.reinsertion(offspring)
 
     def run(self):
         self.initPopul()
         self.bestsol = []
         self.bestfit = self.popul.getFitnesses()[0]
-        j=0
-        stack=[0]
+        l=0
+        previous=self.popul.bestFitness()
         for i in range(self.numits+1):
-            if self.popul.getRanking()[0][1]!=stack[0]:
-                stack.pop(0)
-                stack.append(self.popul.getRanking()[0][1])
-                j=0
-            if self.popul.getRanking()[0][1]==stack[0] and j%70==0 and j!=0:
+            if l==50:
                 self.iteration(1)
-                j+=1
-
+                l=0
+                print("welele")
             else:
-                self.iteration()
-                j+=1
+                self.iteration(2)
+
             bs, bf = self.popul.bestSolution()
+
+            if bf!=previous:
+                l=0
+                previous=bf
+            else:
+                l+=1
+
             if bf < self.bestfit:
                 self.bestfit = bf
                 self.bestsol = bs
-
             print("Iteration:", i, " ", "Best: ", self.popul.bestFitness())
         print("Best solution: ", self.bestsol.getGenes())
         print("Best fitness: ", self.bestfit)
@@ -106,7 +109,7 @@ def distmat(dic):
     return res
 
 def dist(i,j,dic):
-    return (dic[i][0]-dic[j][0])**2+(dic[i][1]-dic[j][1])**2
+    return int(sqrt((dic[i][0]-dic[j][0])**2+(dic[i][1]-dic[j][1])**2))
 
 def generate_blocks(mat,perc):
     res = []
@@ -178,7 +181,7 @@ if __name__=="__main__":
     dic = parser("qa194.tsp")
     mat = distmat(dic)
     blocks=generate_blocks(mat,0.4)
-    ea = EvolAlgorithm(200, 20000, 100,blocks,mat)
+    ea = EvolAlgorithm(100, 4000, 70,blocks,mat)
     ea.run()
 
 

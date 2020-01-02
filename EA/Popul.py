@@ -12,6 +12,18 @@ class Popul:
         self.ranking = self.getFitnessesAndIndivsSel()
 
 
+    def addIndivs(self,indiv):
+        self.indivs.extend(indiv)
+        self.updateRanking()
+        inds=[]
+        for i in range(len(indiv)):
+            ind=self.ranking[-i-1][0]
+            inds.append(self.indivs[ind])
+        for individuo in inds:
+            self.indivs.remove(individuo)
+        self.updateRanking()
+
+
     def getIndiv(self, index):
         return self.indivs[index]
 
@@ -27,7 +39,7 @@ class Popul:
             fitnessesAndIndvs.append((ind,self.indivs[ind].getFitness()))
         size = len(fitnessesAndIndvs)
         for i in range(size):
-            for j in range(0, self.popsize - i - 1):
+            for j in range(0, size - i - 1):
                 if fitnessesAndIndvs[j][1] > fitnessesAndIndvs[j + 1][1]:
                     fitnessesAndIndvs[j], fitnessesAndIndvs[j + 1] = fitnessesAndIndvs[j + 1], fitnessesAndIndvs[j]
         return fitnessesAndIndvs
@@ -45,7 +57,7 @@ class Popul:
                 bestsol = i
         return self.getIndiv(bestsol), bestf
     
-    def selection(self, n,type="t"):
+    def selection(self, n ,type="t"):
         res = []
         if type=="t":
             fitnessesAndIndvs=self.ranking[:n]
@@ -99,12 +111,16 @@ class Popul:
             new_inds += 2
         return offspring
 
-    def random_mutations(self,perc=0.25):
+    def random_mutations(self,perc=0.25,direction="last"):
         inds = []
         n = int(len(self.indivs)*perc)
-        for ind in self.ranking[len(self.indivs)-n:]:
-            inds.append(ind[0])
-        n = randint(1,30)
+        if direction=="last":
+            for ind in self.ranking[len(self.indivs)-n:]:
+                inds.append(ind[0])
+        else:
+            for ind in self.ranking[:n]:
+                inds.append(ind[0])
+        n = randint(1,10)
         for ind in inds:
             for i in range(n):
                 m = randint(2, 3)
@@ -112,7 +128,7 @@ class Popul:
         self.ranking = self.getFitnessesAndIndivsSel()
 
 
-    def reinsertion(self, offspring):   #formação de uma população com descendentes da recombinação e da seleção
+    def reinsertion(self, offspring):
         tokeep = self.selection(self.popsize-len(offspring))
         ind_offsp = 0
         for i in range(self.popsize):
