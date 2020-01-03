@@ -11,19 +11,6 @@ class Popul:
         self.indivs = indivs
         self.ranking = self.getFitnessesAndIndivsSel()
 
-
-    def addIndivs(self,indiv):
-        self.indivs.extend(indiv)
-        self.updateRanking()
-        inds=[]
-        for i in range(len(indiv)):
-            ind=self.ranking[-i-1][0]
-            inds.append(self.indivs[ind])
-        for individuo in inds:
-            self.indivs.remove(individuo)
-        self.updateRanking()
-
-
     def getIndiv(self, index):
         return self.indivs[index]
 
@@ -34,6 +21,9 @@ class Popul:
         return fitnesses
 
     def getFitnessesAndIndivsSel(self):
+        """
+        returns the individual and the respective fitness and further sorts by best fitness
+        """
         fitnessesAndIndvs = []
         for ind in range(len(self.indivs)):
             fitnessesAndIndvs.append((ind,self.indivs[ind].getFitness()))
@@ -45,9 +35,15 @@ class Popul:
         return fitnessesAndIndvs
 
     def bestFitness(self):
+        """
+        returns the best fitness
+        """
         return min(self.getFitnesses())
 
     def bestSolution(self):
+        """
+        returns a tuple with the gene sequence corresponding to the best fitness and the respective fitness
+        """
         fitnesses = self.getFitnesses()
         bestf = fitnesses[0]
         bestsol = 0
@@ -57,19 +53,15 @@ class Popul:
                 bestsol = i
         return self.getIndiv(bestsol), bestf
     
-    def selection(self, n ,type="t"):
+    def selection(self, n):
+        """
+        returns the n best individuals of a population
+        param n: number of individuals to be selected in the ranking
+        """
         res = []
-        if type=="t":
-            fitnessesAndIndvs=self.ranking[:n]
-            for i in range(n):
-                res.append(fitnessesAndIndvs[i][0])
-        elif type=="roul":
-            fitnesses = list(self.linscaling(self.getFitnesses()))
-            #fitnesses = list(self.getFitnesses())
-            for i in range(n):
-                sel = self.roulette(fitnesses)
-                fitnesses[sel] = 0.0
-                res.append(sel)
+        fitnessesAndIndvs=self.ranking[:n]
+        for i in range(n):
+            res.append(fitnessesAndIndvs[i][0])
         return res
 
     def getRanking(self):
@@ -77,27 +69,14 @@ class Popul:
 
     def updateRanking(self):
         self.ranking=self.getFitnessesAndIndivsSel()
-
-    def roulette(self, f):
-        tot = sum(f)
-        val = uniform(0.8,0.9)
-        acum = 1
-        ind = 0
-        while acum > val:
-            acum -= (f[ind] / tot)
-            ind += 1
-        return ind-1
-    
-    def linscaling(self, fitnesses):
-        mx = max(fitnesses)
-        mn = min(fitnesses)
-        res = []
-        for f in fitnesses:
-            val = (f-mn)/(mx-mn)
-            res.append(val)
-        return res
     
     def recombination(self, parents, noffspring):  #numero de descendentes igual ao número de pais
+        """
+        recombination of the population, starting with the selection of the parents and further random
+        mutations in the offspring
+        param parents:
+        param noffspring:
+        """
         offspring = []
         new_inds = 0
         while new_inds < noffspring:
@@ -111,15 +90,16 @@ class Popul:
             new_inds += 2
         return offspring
 
-    def random_mutations(self,perc=0.25,direction="last"):
+    def random_mutations(self,perc=0.25):
+        """
+        random mutations in the worst percentage of the population. It performs a 2 or 3 swap mutation
+         a random number of times
+        param perc: percentage of the population chosen to perform random mutations
+        """
         inds = []
         n = int(len(self.indivs)*perc)
-        if direction=="last":
-            for ind in self.ranking[len(self.indivs)-n:]:
-                inds.append(ind[0])
-        else:
-            for ind in self.ranking[:n]:
-                inds.append(ind[0])
+        for ind in self.ranking[len(self.indivs)-n:]:
+            inds.append(ind[0])
         n = randint(1,10)
         for ind in inds:
             for i in range(n):
@@ -129,6 +109,10 @@ class Popul:
 
 
     def reinsertion(self, offspring):
+        """
+        insertion of the offspring into the population
+        param offspring: list with all the offspring of a generation
+        """
         tokeep = self.selection(self.popsize-len(offspring))
         ind_offsp = 0
         for i in range(self.popsize):

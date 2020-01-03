@@ -9,7 +9,6 @@ from collections import defaultdict
 from random import shuffle, randint, sample
 import itertools
 
-from matplotlib.pyplot import plot, show
 
 
 class EvolAlgorithm:
@@ -22,6 +21,9 @@ class EvolAlgorithm:
         self.matdist = mat
 
     def generate_indvs(self):
+        """
+        generate the individuals for the first generation using the previously built blocks
+        """
         res = []
         for i in range(self.popsize):
             x = self.blocks.copy()
@@ -31,10 +33,25 @@ class EvolAlgorithm:
         return res
         
     def initPopul(self):
+        """
+        create the first generation of individuals
+        """
         indivs=self.generate_indvs()
         self.popul= Popul(self.popsize,indivs)
         
     def iteration(self,mode):
+        """
+        iterative process depending on the mode for each generation and further selection, recombination
+        and reinsertion
+        param mode: mode 1 will perform a normal random mutation in a generation being the default one;
+        mode 2 will be activated when the best fitness of the population remains the same for the last 100 iterations.
+        This will perform a 3 swap mutation in the 4th to the 10th individual with the best fitness and
+        random mutations in the worst 70% of the population; mode 3 is activated when the best fitness remains the
+        same for the previous 50 iterations and performs random mutations in the worst 50% of the population;
+        mode 4 is activated when the best fitness remains the same for the previous 250 iterations. This mode will
+        perform a 2 swap mutation in the individual with best fitness and random mutations in the worst 50% of the
+        population
+        """
         if mode == 1:
             self.popul.random_mutations()
         elif mode==2:
@@ -59,6 +76,11 @@ class EvolAlgorithm:
         self.popul.reinsertion(offspring)
 
     def run(self):
+        """
+        Will start the iteration process generation a population and retrieving the best fitness for each iteration.
+        It will further select the modes for the iteration process and retrieve at the end the best sequence and
+        respective fitness value
+        """
         self.initPopul()
         self.bestsol = []
         self.bestfit = self.popul.getFitnesses()[0]
@@ -70,10 +92,10 @@ class EvolAlgorithm:
                 print("---------Random mutations in the worst 50 % ------------")
             elif l%100==0:
                 self.iteration(2)
-                print("---------Random mutations in the worse 70 % and 3-swap mutation in the best 4 to 10------------")
+                print("---------Random mutations in the worst 70 % and 3-swap mutation in the best 4 to 10------------")
             elif l%250==0:
                 self.iteration(4)
-                print("---------Random mutations in the worse 50 % and 2-swap mutation in the best ------------")
+                print("---------Random mutations in the worst 50 % and 2-swap mutation in the best ------------")
                 l=1
             else:
                 self.iteration(1)
@@ -95,6 +117,10 @@ class EvolAlgorithm:
         #self.bestsol, self.bestfit = self.popul.bestSolution()
 
 def parser(file):
+    """
+    creates a dictionary with the node id as keys and the corresponding coordinates as values
+    param file: text file with the node id and respective coordinates
+    """
     with open(file) as f:
         lines=f.readlines()
         res={}
@@ -111,6 +137,10 @@ def parser(file):
         return res
 
 def distmat(dic):
+    """
+    creates a distance matrix calculating the distance between each node
+    param dic: dictionary with the node id as keys and respective coordinates as values
+    """
     res= np.zeros((len(dic.keys()),(len(dic.keys()))))
     for i in dic.keys():
         for j in range(i+1,len(dic.keys())+1):
@@ -120,9 +150,20 @@ def distmat(dic):
     return res
 
 def dist(i,j,dic):
+    """
+    calculates the euclidean distance between each node
+    param i: line of the matrix
+    param j: column of the matrix
+    param dic: dictionary with the node id as keys and respective coordinates as values
+    """
     return int(sqrt((dic[i][0]-dic[j][0])**2+(dic[i][1]-dic[j][1])**2))
 
 def generate_blocks(mat,perc):
+    """
+    generates blocks of close nodes further merging the blocks with common nodes between them. Returns a list of blocks
+    param mat: distance matrix
+    param perc: percentage of blocks to be kept for individual generation
+    """
     res = []
     for i in range(len(mat)):
         min=None
@@ -149,11 +190,11 @@ def generate_blocks(mat,perc):
             merged.append([g])
     return merged
 
-
-#def divided_blocks(lst,n):
-
-# merge function to  merge all sublist having common elements.
 def merge_common(lists):
+    """
+    merge function to  merge all sublist having common elements
+    param lists: lists of blocks
+    """
     neigh = defaultdict(set)
     visited = set()
     for each in lists:
@@ -181,7 +222,7 @@ if __name__=="__main__":
     dic = parser("qa194.tsp")
     mat = distmat(dic)
     blocks=generate_blocks(mat,0.86)
-    ea = EvolAlgorithm(120, 20000, 50,blocks,mat)
+    ea = EvolAlgorithm(400, 100000, 200,blocks,mat)
     ea.run()
 
 

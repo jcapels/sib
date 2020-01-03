@@ -14,6 +14,9 @@ class Indiv:
 
 
     def calculate_fitness(self):
+        """
+        calculates the fitness of the individual through the distance between the genes
+        """
         res=0
         i=0
         while i<len(self.genes)-1:
@@ -31,15 +34,20 @@ class Indiv:
     def getGenes(self):
         return self.genes
 
-    def initRandom(self, size):
-        self.genes = []
-        for i in range(size):
-            self.genes.append(randint(0, self.maxValue))
-
     def dist(self, i, j):
+        """
+        retrieves the distance in the distance matrix corresponding to the cell ij
+        param i: line number
+        param j: column number
+        """
         return int(self.distMat[i-1][j-1])
 
     def mutation(self, type=2):
+        """
+        performs a swap mutation of 2 or 3 genes, depending on the specified type, and further
+        calculates the new fitness. It takes into account special cases where the swapped genes were neighbors
+        param type: it can be either 2 or 3 depending on the number of swapped genes
+        """
         if type==2:
             s = len(self.genes)
             pos1=0
@@ -125,11 +133,21 @@ class Indiv:
         return self.one_pt_crossover(indiv2)
 
     def one_pt_crossover(self, indiv2):
+        """
+        performs a partially mapped crossover returning two new individuals
+        param indiv2: genes from a second individual for recombination
+        """
         child1 = self.crossover_pmx((self.genes.copy(),indiv2.getGenes().copy()))
-        child2 = self.crossover_pmx((indiv2.getGenes(),self.genes))
+        child2 = self.crossover_pmx((indiv2.getGenes().copy(),self.genes.copy()))
         return Indiv(self.distMat, child1), Indiv(self.distMat, child2)
 
     def crossover_pmx(self,parents):
+        """
+        performs a partially mapped crossover by choosing the middle fragment of the genes of one parent and completing
+        the rest of the sequence with the genes from the other parent. For the second child the middle fragment of the
+        other parent is used
+        param parents: list with both parents
+        """
         pos1 = 0
         pos2 = 0
         size = len(parents[0])
@@ -165,43 +183,11 @@ class Indiv:
         return child
 
     def random_mutations_indiv(self):
+        """
+        performs swap mutations (2 or 3 genes) n times
+        """
         n = randint(1, 3)
         for i in range(n):
             m = randint(2, 3)
             self.mutation(m)
 
-
-def distmat(dic):
-    res= np.zeros((len(dic.keys()),(len(dic.keys()))))
-    for i in dic.keys():
-        for j in range(i+1,len(dic.keys())+1):
-            d=dist(i,j,dic)
-            res[i-1][j-1]=d
-            res[j-1][i-1]= d
-    return res
-
-# def dist(i,j,dic):
-#     return sqrt((dic[i][0]-dic[j][0])**2+(dic[i][1]-dic[j][1])**2)
-#
-# def parser(file):
-#     with open(file) as f:
-#         lines=f.readlines()
-#         res={}
-#         go=False
-#         for line in lines:
-#             if line.strip("\n") == "EOF":
-#                 go=False
-#             if go:
-#                 line=line.strip("\n")
-#                 l=line.split(' ')
-#                 res[int(l[0])]=(float(l[1]), float(l[2]))
-#             if line.strip("\n")=="NODE_COORD_SECTION":
-#                 go=True
-#         return res
-# if __name__=="__main__":
-#     genes = [122, 78, 96, 84, 83, 45, 12, 10, 9, 22, 163, 21, 17, 11, 14, 171, 148, 126, 125, 140, 169, 179, 173, 174, 138, 38, 109, 110, 6, 8, 156, 73, 155, 76, 129, 112, 69, 7, 4, 75, 1, 3, 5, 15, 19, 31, 41, 27, 39, 47, 65, 43, 53, 120, 55, 116, 42, 30, 32, 35, 44, 46, 40, 34, 117, 48, 52, 56, 36, 61, 119, 67, 82, 191, 37, 68, 79, 81, 111, 20, 51, 85, 103, 98, 130, 134, 137, 139, 181, 188, 193, 189, 16, 192, 194, 182, 186, 187, 190, 185, 133, 115, 105, 91, 72, 2, 102, 92, 97, 152, 184, 128, 124, 123, 29, 28, 141, 24, 26, 74, 106, 118, 131, 147, 175, 183, 66, 54, 165, 60, 153, 157, 154, 62, 150, 158, 136, 143, 135, 49, 107, 108, 100, 64, 57, 177, 70, 13, 88, 93, 95, 18, 121, 160, 166, 87, 162, 114, 33, 101, 58, 127, 149, 172, 176, 164, 50, 161, 86, 146, 145, 142, 113, 80, 71, 151, 77, 25, 23, 99, 94, 89, 59, 144, 63, 90, 132, 104, 167, 170, 178, 180, 168, 159]
-#
-#     dic = parser("qa194.tsp")
-#     mat = distmat(dic)
-#     new = Indiv(mat,genes)
-#     print(new.getFitness())
