@@ -56,7 +56,6 @@ class EvolAlgorithm:
             self.popul.random_mutations()
         elif mode==2:
             best_indexes2 = self.popul.getRanking()[4:10]
-            #self.popul.getIndiv(self.popul.getRanking()[0][0]).mutation(2)
             for i in best_indexes2:
                 self.popul.getIndiv(i[0]).mutation(3)
             self.popul.updateRanking()
@@ -67,7 +66,7 @@ class EvolAlgorithm:
 
         elif mode==4:
             self.popul.random_mutations(0.5)
-            self.popul.getIndiv(self.popul.getRanking()[0][0]).mutation(2)
+            self.popul.getIndiv(self.popul.getRanking()[0][0]).mutation(3)
             self.popul.updateRanking()
 
 
@@ -222,7 +221,7 @@ if __name__=="__main__":
     dic = parser("qa194.tsp")
     mat = distmat(dic)
     blocks=generate_blocks(mat,0.86)
-    ea = EvolAlgorithm(400, 100000, 200,blocks,mat)
+    ea = EvolAlgorithm(120, 1000, 50,blocks,mat)
     ea.run()
 
 

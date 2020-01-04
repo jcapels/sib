@@ -52,7 +52,6 @@ class Indiv:
             s = len(self.genes)
             pos1=0
             pos2=0
-            #while pos1 == pos2 or pos1 - pos2 in [-1, 1, 193, -193]:
             while pos1==pos2:
                 pos1 = randint(0, s - 1)
                 pos2 = randint(0, s - 1)
@@ -93,40 +92,29 @@ class Indiv:
         elif type == 3:
             s = len(self.genes)
             pos1 = 0
-            pos2 = 0
-            pos3 = 0
-            #while pos1 == pos2 or pos2 == pos3 or pos1 == pos3 or pos1 - pos2 in [1, -1, 193, -193] or pos1 - pos3 in [1, -1, 193, -193] or pos2 - pos3 in [1, -1, 193, -193]:
-            while pos1 == pos2 or pos2 == pos3 or pos1==pos3:
-                pos1 = randint(0, s - 1)
-                pos2 = randint(0, s - 1)
-                pos3 = randint(0, s - 1)
+            # while pos1 == pos2 or pos1 - pos2 in [-1, 1, 193, -193]:
+            pos1 = randint(0, s - 1)
+            pos2 = (pos1 + 1) % s
+            gene1 = self.genes[pos1]
+            gene2 = self.genes[pos2]
 
-            if pos1-pos2 in [1,-1,193,-193] or pos1-pos3 in [1,-1,193,-193] or pos2-pos3 in [1,-1,193,-193]:
-                self.genes[pos1], self.genes[pos2], self.genes[pos3] = self.genes[pos2], self.genes[pos3], self.genes[
-                    pos1]
-                self.calculate_fitness()
+            if pos1 - pos2 in [-1, 193]:
+                self.fitness -= self.dist(self.genes[pos1 - 1], self.genes[pos1]) \
+                                + self.dist(self.genes[pos2], self.genes[(pos2 + 1) % (s)])
 
-            else:
-                value1 = (self.dist(self.genes[pos1 - 1], self.genes[pos1]) \
-                           + self.dist(self.genes[pos1],self.genes[(pos1+1) % (s)]) \
-                           + self.dist(self.genes[pos2], self.genes[(pos2+1) % (s)]) \
-                            + self.dist(self.genes[pos2 - 1], self.genes[pos2]) \
-                            + self.dist(self.genes[pos3 - 1], self.genes[pos3])  \
-                            + self.dist(self.genes[pos3], self.genes[(pos3+1) % (s)]))
+                self.fitness += self.dist(self.genes[pos1 - 1], self.genes[pos2]) \
+                                + self.dist(self.genes[pos1], self.genes[(pos2 + 1) % (s)])
 
-                self.fitness-=value1
+                self.genes[pos1], self.genes[pos2] = gene2, gene1
 
-                value2 = self.dist(self.genes[pos1 - 1], self.genes[pos2]) \
-                            + self.dist(self.genes[pos2], self.genes[(pos1+1) % (s)]) \
-                            + self.dist(self.genes[pos3 - 1], self.genes[pos1]) \
-                            + self.dist(self.genes[pos1], self.genes[(pos3+1) % (s)]) \
-                            + self.dist(self.genes[pos2 - 1], self.genes[pos3]) \
-                            + self.dist(self.genes[pos3], self.genes[(pos2+1) % (s)])
+            elif pos1 - pos2 in [1, -193]:
+                self.fitness -= self.dist(self.genes[pos2 - 1], self.genes[pos2]) \
+                                + self.dist(self.genes[pos1], self.genes[(pos1 + 1) % (s)])
 
-                self.fitness += value2
+                self.fitness += self.dist(self.genes[pos2 - 1], self.genes[pos1]) \
+                                + self.dist(self.genes[pos2], self.genes[(pos1 + 1) % (s)])
 
-                self.genes[pos1], self.genes[pos2], self.genes[pos3] = self.genes[pos2], self.genes[pos3], self.genes[
-                    pos1]
+                self.genes[pos1], self.genes[pos2] = gene2, gene1
 
 
     def crossover(self, indiv2):
