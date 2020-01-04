@@ -91,10 +91,10 @@ class EvolAlgorithm:
                 print("---------Random mutations in the worst 50 % ------------")
             elif l%100==0:
                 self.iteration(2)
-                print("---------Random mutations in the worst 70 % and 3-swap mutation in the best 4 to 10------------")
+                print("---------Random mutations in the worst 70 % and type 3 mutation in the best 4 to 10------------")
             elif l%250==0:
                 self.iteration(4)
-                print("---------Random mutations in the worst 50 % and 2-swap mutation in the best ------------")
+                print("---------Random mutations in the worst 50 % and type 3 mutation in the best ------------")
                 l=1
             else:
                 self.iteration(1)
@@ -221,7 +221,7 @@ if __name__=="__main__":
     dic = parser("qa194.tsp")
     mat = distmat(dic)
     blocks=generate_blocks(mat,0.86)
-    ea = EvolAlgorithm(120, 1000, 50,blocks,mat)
+    ea = EvolAlgorithm(800, 4000, 400,blocks,mat)
     ea.run()
 
 
