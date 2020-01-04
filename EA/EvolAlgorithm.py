@@ -48,7 +48,9 @@ class EvolAlgorithm:
         param mode: mode 1 will perform a random mutation in populations being the default one;
         mode 2 will be activated when the best fitness of the populations remains the same for the last 100 iterations.
         This will perform a random mutations in the 5th to the 9th individual with the best fitness and
-        random mutations in the worst 70% individuals of the population; mode 3 is activated when the best fitness remains the
+        random mutations in the worst 70% individuals of the population, also in the 2th to the 14th individual with
+        the best fitness the mutation type 4 is performed;
+         mode 3 is activated when the best fitness remains the
         same for the previous 50 iterations and performs random mutations in the worst 50% of the population;
         mode 4 is activated when the best fitness remains the same for the previous 150 iterations. This mode will
         perform a type 3 mutation in the individual with best fitness, random mutations in the worst 50% of the
@@ -63,22 +65,31 @@ class EvolAlgorithm:
                     self.populs[i].getIndiv(j[0]).random_mutations_indiv()
                 self.populs[i].updateRanking()
                 self.populs[i].random_mutations(0.7)
+                best_indexes2 = self.populs[i].getRanking()[1:15]
+                for j in best_indexes2:
+                    self.populs[i].getIndiv(j[0]).mutation(4)
+                self.populs[i].updateRanking()
 
             elif mode==3:
                 self.populs[i].random_mutations(0.5)
 
             elif mode==4 and i>0:
+                n=randint(0,1)
                 self.populs[i].random_mutations(0.5)
-                self.populs[i].getIndiv(self.populs[i].getRanking()[0][0]).mutation(3)
+                #self.populs[i].getIndiv(self.populs[i].getRanking()[0][0]).mutation(3)
                 self.populs[i].updateRanking()
 
                 self.populs[i].migration(self.populs[i-1])
                 self.populs[i-1].migration(self.populs[i])
 
 
+
             parents = self.populs[i].selection(self.noffspring)
             offspring = self.populs[i].recombination(parents, self.noffspring)
             self.populs[i].reinsertion(offspring)
+
+
+
 
     def run(self):
         """
@@ -96,15 +107,15 @@ class EvolAlgorithm:
 
         previous=bf
         for i in range(self.numits+1):
-            if l%50==0 and l%100!=0 and l%150!=0:
+            if l%50==0 and l%100!=0 and l%350!=0:
                 self.iteration(3)
                 print("---------Random mutations in the worst 50 % ------------")
             elif l%100==0:
                 self.iteration(2)
-                print("---------Random mutations in the worst 70 % and type 3 mutation in the best 4 to 10------------")
-            elif l%150==0:
+                print("---------Random mutations in the worst 70 % and type 3 mutation in the best 3 to 9 + block swap------------")
+            elif l%350==0:
                 self.iteration(4)
-                print("---------Random mutations in the worst 50 % and type 3 mutation in the best ------------")
+                print("---------Random mutations in the worst 50 % and type 3 mutation in the best and migration------------")
                 l=1
             else:
                 self.iteration(1)
@@ -129,6 +140,7 @@ class EvolAlgorithm:
 
             if i % 100 == 0:
                 print(bs.getGenes())
+                print()
             print("Iteration:", i, " ", "Best: ", bf)
         print("Best solution: ", self.bestsol.getGenes())
         print("Best fitness: ", self.bestfit)
@@ -241,7 +253,7 @@ if __name__=="__main__":
     mat = distmat(dic)
     blocks=[]
     for i in range(3):
-        blocks.append(generate_blocks(mat, 0.86))
+        blocks.append(generate_blocks(mat, 0.86+(i/100)))
     ea = EvolAlgorithm(50, 40000, 26,blocks,mat)
     ea.run()
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from copy import copy
+from copy import copy, deepcopy
 
 from Indiv import Indiv
 from random import sample, random, randint, uniform
@@ -106,7 +106,7 @@ class Popul:
             for i in range(n):
                 m = randint(2, 3)
                 self.getIndiv(ind).mutation(m)
-        self.ranking = self.getFitnessesAndIndivsSel()
+        self.updateRanking()
 
 
     def reinsertion(self, offspring):
@@ -120,7 +120,7 @@ class Popul:
             if i not in tokeep:
                 self.indivs[i] = offspring[ind_offsp]
                 ind_offsp += 1
-        self.ranking=self.getFitnessesAndIndivsSel()
+        self.updateRanking()
         
     def migration(self,popul):
         """
@@ -128,11 +128,12 @@ class Popul:
         param popul: the other island
         return:
         """
-        best = popul.selection(15)
+        n=5
+        best = popul.selection(5)
         best_indvs = []
         for i in best:
-            best_indvs.append(copy(popul.getIndiv(i)))
-        tokeep = self.selection(self.popsize - 15)
+            best_indvs.append(deepcopy(popul.getIndiv(i)))
+        tokeep = self.selection(self.popsize - 5)
         ind_offsp = 0
         for i in range(self.popsize):
             if i not in tokeep:
