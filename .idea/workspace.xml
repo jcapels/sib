@@ -2,10 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b7edee4f-1a69-4c8d-8e8a-4b1dc1dfbadb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sib.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EA/EvolAlgorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/EA/EvolAlgorithm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EA/Indiv.py" beforeDir="false" afterPath="$PROJECT_DIR$/EA/Indiv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EA/TestGenes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EA/Popul.py" beforeDir="false" afterPath="$PROJECT_DIR$/EA/Popul.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

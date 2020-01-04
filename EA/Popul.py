@@ -74,8 +74,8 @@ class Popul:
         """
         recombination of the population, starting with the selection of the parents and further random
         mutations in the offspring
-        param parents:
-        param noffspring:
+        param parents: list of individuals for parents
+        param noffspring: list of existing offspring
         """
         offspring = []
         new_inds = 0
@@ -92,8 +92,8 @@ class Popul:
 
     def random_mutations(self,perc=0.25):
         """
-        random mutations in the worst percentage of the population. It performs a 2 or 3 swap mutation
-         a random number of times
+        random mutations in the worst percentage of the population. It performs mutations type 2 or 3
+        a random number of times
         param perc: percentage of the population chosen to perform random mutations
         """
         inds = []

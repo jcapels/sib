@@ -43,13 +43,13 @@ class EvolAlgorithm:
         """
         iterative process depending on the mode for each generation and further selection, recombination
         and reinsertion
-        param mode: mode 1 will perform a normal random mutation in a generation being the default one;
+        param mode: mode 1 will perform a random mutation in the population being the default one;
         mode 2 will be activated when the best fitness of the population remains the same for the last 100 iterations.
-        This will perform a 3 swap mutation in the 4th to the 10th individual with the best fitness and
+        This will perform a type 3 mutation in the 4th to the 10th individual with the best fitness and
         random mutations in the worst 70% of the population; mode 3 is activated when the best fitness remains the
         same for the previous 50 iterations and performs random mutations in the worst 50% of the population;
         mode 4 is activated when the best fitness remains the same for the previous 250 iterations. This mode will
-        perform a 2 swap mutation in the individual with best fitness and random mutations in the worst 50% of the
+        perform a type 2 mutation in the individual with best fitness and random mutations in the worst 50% of the
         population
         """
         if mode == 1:

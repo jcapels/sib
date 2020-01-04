@@ -44,9 +44,10 @@ class Indiv:
 
     def mutation(self, type=2):
         """
-        performs a swap mutation of 2 or 3 genes, depending on the specified type, and further
-        calculates the new fitness. It takes into account special cases where the swapped genes were neighbors
-        param type: it can be either 2 or 3 depending on the number of swapped genes
+        performs a swap mutation depending on the specified type, and further calculates the new fitness.
+        It takes into account special cases where the swapped genes were neighbors
+        param type: it can be either 2 or 3. In type 2 it will do a swap of two random genes. Type 3 will swap two
+        consecutive genes
         """
         if type==2:
             s = len(self.genes)
@@ -131,9 +132,9 @@ class Indiv:
 
     def crossover_pmx(self,parents):
         """
-        performs a partially mapped crossover by choosing the middle fragment of the genes of one parent and completing
-        the rest of the sequence with the genes from the other parent. For the second child the middle fragment of the
-        other parent is used
+        performs a partially mapped crossover by choosing the middle fragment of the sequence of one parent and
+        completing the rest of the sequence with the genes from the other parent.
+        For the second child the middle fragment of the other parent is used
         param parents: list with both parents
         """
         pos1 = 0
@@ -172,7 +173,7 @@ class Indiv:
 
     def random_mutations_indiv(self):
         """
-        performs swap mutations (2 or 3 genes) n times
+        performs random mutations (random type) n times
         """
         n = randint(1, 3)
         for i in range(n):
