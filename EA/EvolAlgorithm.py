@@ -20,13 +20,13 @@ class EvolAlgorithm:
         self.blocks = blocks
         self.matdist = mat
 
-    def generate_indvs(self):
+    def generate_indvs(self,block):
         """
         generate the individuals for the first generation using the previously built blocks
         """
         res = []
         for i in range(self.popsize):
-            x = self.blocks.copy()
+            x = block.copy()
             shuffle(x)
             indv = Indiv(self.matdist, list(itertools.chain.from_iterable(x)))
             res.append(indv)
@@ -34,45 +34,51 @@ class EvolAlgorithm:
         
     def initPopul(self):
         """
-        create the first generation of individuals
+        create the first generation of individuals in each island
         """
-        indivs=self.generate_indvs()
-        self.popul= Popul(self.popsize,indivs)
+        self.populs=[]
+        for block in self.blocks:
+            indivs = self.generate_indvs(block)
+            self.populs.append(Popul(self.popsize,indivs))
         
     def iteration(self,mode):
         """
         iterative process depending on the mode for each generation and further selection, recombination
         and reinsertion
-        param mode: mode 1 will perform a random mutation in the population being the default one;
-        mode 2 will be activated when the best fitness of the population remains the same for the last 100 iterations.
-        This will perform a type 3 mutation in the 4th to the 10th individual with the best fitness and
-        random mutations in the worst 70% of the population; mode 3 is activated when the best fitness remains the
+        param mode: mode 1 will perform a random mutation in populations being the default one;
+        mode 2 will be activated when the best fitness of the populations remains the same for the last 100 iterations.
+        This will perform a random mutations in the 5th to the 9th individual with the best fitness and
+        random mutations in the worst 70% individuals of the population; mode 3 is activated when the best fitness remains the
         same for the previous 50 iterations and performs random mutations in the worst 50% of the population;
-        mode 4 is activated when the best fitness remains the same for the previous 250 iterations. This mode will
-        perform a type 2 mutation in the individual with best fitness and random mutations in the worst 50% of the
-        population
+        mode 4 is activated when the best fitness remains the same for the previous 150 iterations. This mode will
+        perform a type 3 mutation in the individual with best fitness, random mutations in the worst 50% of the
+        population and will promote migrations between islands
         """
-        if mode == 1:
-            self.popul.random_mutations()
-        elif mode==2:
-            best_indexes2 = self.popul.getRanking()[4:10]
-            for i in best_indexes2:
-                self.popul.getIndiv(i[0]).mutation(3)
-            self.popul.updateRanking()
-            self.popul.random_mutations(0.7)
+        for i in range(len(self.populs)):
+            if mode == 1:
+                self.populs[i].random_mutations()
+            elif mode==2:
+                best_indexes2 = self.populs[i].getRanking()[4:10]
+                for j in best_indexes2:
+                    self.populs[i].getIndiv(j[0]).random_mutations_indiv()
+                self.populs[i].updateRanking()
+                self.populs[i].random_mutations(0.7)
 
-        elif mode==3:
-            self.popul.random_mutations(0.5)
+            elif mode==3:
+                self.populs[i].random_mutations(0.5)
 
-        elif mode==4:
-            self.popul.random_mutations(0.5)
-            self.popul.getIndiv(self.popul.getRanking()[0][0]).mutation(3)
-            self.popul.updateRanking()
+            elif mode==4 and i>0:
+                self.populs[i].random_mutations(0.5)
+                self.populs[i].getIndiv(self.populs[i].getRanking()[0][0]).mutation(3)
+                self.populs[i].updateRanking()
+
+                self.populs[i].migration(self.populs[i-1])
+                self.populs[i-1].migration(self.populs[i])
 
 
-        parents = self.popul.selection(self.noffspring)
-        offspring = self.popul.recombination(parents, self.noffspring)
-        self.popul.reinsertion(offspring)
+            parents = self.populs[i].selection(self.noffspring)
+            offspring = self.populs[i].recombination(parents, self.noffspring)
+            self.populs[i].reinsertion(offspring)
 
     def run(self):
         """
@@ -82,24 +88,34 @@ class EvolAlgorithm:
         """
         self.initPopul()
         self.bestsol = []
-        self.bestfit = self.popul.getFitnesses()[0]
+        self.bestfit = self.populs[0].getFitnesses()[0]
         l=1
-        previous=self.popul.bestFitness()
+        bs, bf = self.populs[0].getIndiv(self.populs[0].getRanking()[0][0]), self.populs[0].getIndiv(
+            self.populs[0].getRanking()[0][0]).getFitness()
+
+
+        previous=bf
         for i in range(self.numits+1):
-            if l%50==0 and l%100!=0 and l%250!=0:
+            if l%50==0 and l%100!=0 and l%150!=0:
                 self.iteration(3)
                 print("---------Random mutations in the worst 50 % ------------")
             elif l%100==0:
                 self.iteration(2)
                 print("---------Random mutations in the worst 70 % and type 3 mutation in the best 4 to 10------------")
-            elif l%250==0:
+            elif l%150==0:
                 self.iteration(4)
                 print("---------Random mutations in the worst 50 % and type 3 mutation in the best ------------")
                 l=1
             else:
                 self.iteration(1)
 
-            bs, bf = self.popul.bestSolution()
+
+            for popul in self.populs:
+                newfit = popul.getIndiv(
+                    popul.getRanking()[0][0]).getFitness()
+                if bf > newfit:
+                    bs, bf = popul.getIndiv(popul.getRanking()[0][0]), popul.getIndiv(popul.getRanking()[0][0]).getFitness()
+
 
             if bf!=previous:
                 l=1
@@ -110,7 +126,10 @@ class EvolAlgorithm:
             if bf < self.bestfit:
                 self.bestfit = bf
                 self.bestsol = bs
-            print("Iteration:", i, " ", "Best: ", self.popul.bestFitness())
+
+            if i % 100 == 0:
+                print(bs.getGenes())
+            print("Iteration:", i, " ", "Best: ", bf)
         print("Best solution: ", self.bestsol.getGenes())
         print("Best fitness: ", self.bestfit)
         #self.bestsol, self.bestfit = self.popul.bestSolution()
@@ -220,8 +239,10 @@ def merge_common(lists):
 if __name__=="__main__":
     dic = parser("qa194.tsp")
     mat = distmat(dic)
-    blocks=generate_blocks(mat,0.86)
-    ea = EvolAlgorithm(800, 4000, 400,blocks,mat)
+    blocks=[]
+    for i in range(3):
+        blocks.append(generate_blocks(mat, 0.86))
+    ea = EvolAlgorithm(50, 40000, 26,blocks,mat)
     ea.run()
 
 

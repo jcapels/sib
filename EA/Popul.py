@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from copy import copy
 
 from Indiv import Indiv
 from random import sample, random, randint, uniform
@@ -121,8 +122,23 @@ class Popul:
                 ind_offsp += 1
         self.ranking=self.getFitnessesAndIndivsSel()
         
-
-    
+    def migration(self,popul):
+        """
+        perfoms the migration of the best 15 individuals between islands
+        param popul: the other island
+        return:
+        """
+        best = popul.selection(15)
+        best_indvs = []
+        for i in best:
+            best_indvs.append(copy(popul.getIndiv(i)))
+        tokeep = self.selection(self.popsize - 15)
+        ind_offsp = 0
+        for i in range(self.popsize):
+            if i not in tokeep:
+                self.indivs[i] = best_indvs[ind_offsp]
+                ind_offsp += 1
+        self.updateRanking()
 
 
 

@@ -40,7 +40,7 @@ class Indiv:
         param i: line number
         param j: column number
         """
-        return int(self.distMat[i-1][j-1])
+        return self.distMat[i-1][j-1]
 
     def mutation(self, type=2):
         """
