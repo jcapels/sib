@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from copy import copy
+from copy import copy, deepcopy
 from math import sqrt
 
 from Popul import Popul
@@ -88,9 +88,6 @@ class EvolAlgorithm:
             offspring = self.populs[i].recombination(parents, self.noffspring)
             self.populs[i].reinsertion(offspring)
 
-
-
-
     def run(self):
         """
         Will start the iteration process generation a population and retrieving the best fitness for each iteration.
@@ -135,12 +132,12 @@ class EvolAlgorithm:
 
             if bf < self.bestfit:
                 self.bestfit = bf
-                self.bestsol = bs
+                self.bestsol = deepcopy(bs)
 
             # if i % 100 == 0:
             #     print(bs.getGenes())
-            #     print()
-            print("Iteration:", i, " ", "Best: ", bf)
+            #     print(self.bestsol.getGenes())
+            print("Iteration:", i, " ", "Best: ", self.bestfit)
         print("Best solution: ", self.bestsol.getGenes())
         print("Best fitness: ", self.bestfit)
 
