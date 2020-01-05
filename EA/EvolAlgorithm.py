@@ -84,6 +84,7 @@ class EvolAlgorithm:
 
 
             parents = self.populs[i].selection(self.noffspring)
+            shuffle(parents)
             offspring = self.populs[i].recombination(parents, self.noffspring)
             self.populs[i].reinsertion(offspring)
 

@@ -129,11 +129,11 @@ class Popul:
         return:
         """
         n=5
-        best = popul.selection(5)
+        best = popul.selection(10)
         best_indvs = []
         for i in best:
             best_indvs.append(deepcopy(popul.getIndiv(i)))
-        tokeep = self.selection(self.popsize - 5)
+        tokeep = self.selection(self.popsize - 10)
         ind_offsp = 0
         for i in range(self.popsize):
             if i not in tokeep:
