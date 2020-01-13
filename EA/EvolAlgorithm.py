@@ -59,6 +59,7 @@ class EvolAlgorithm:
         for i in range(len(self.populs)):
             if mode == 1:
                 self.populs[i].random_mutations()
+                pass
             elif mode==2:
                 best_indexes2 = self.populs[i].getRanking()[4:10]
                 for j in best_indexes2:
@@ -249,7 +250,7 @@ if __name__=="__main__":
     blocks=[]
     for i in range(3):
         blocks.append(generate_blocks(mat, 0.86+(i/100)))
-    ea = EvolAlgorithm(50, 10000, 26,blocks,mat)
+    ea = EvolAlgorithm(40, 10000, 20,blocks,mat)
     ea.run()
 
 
